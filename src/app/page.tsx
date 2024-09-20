@@ -1,15 +1,54 @@
-'use client';
+"use client";
 
-import { Section, Cell, Image, List } from '@telegram-apps/telegram-ui';
+import WorldIDVerification from "@/components/WorldIdVerification";
+import {
+  DynamicWidget,
+  useDynamicContext,
+  useSmartWallets,
+  useTelegramLogin,
+} from "@dynamic-labs/sdk-react-core";
+import {
+  Section,
+  Cell,
+  Image,
+  List,
+  Spinner,
+} from "@telegram-apps/telegram-ui";
+import { useEffect, useState } from "react";
 
-import { Link } from '@/components/Link/Link';
+// import { Link } from "@/components/Link/Link";
 
-import tonSvg from './_assets/ton.svg';
+// import tonSvg from "./_assets/ton.svg";
 
 export default function Home() {
+  const { sdkHasLoaded, user } = useDynamicContext();
+  const { telegramSignIn }: any = useTelegramLogin();
+  const { isSmartWallet, getEOAWallet, getSmartWallet } = useSmartWallets();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!sdkHasLoaded) return;
+
+    const signIn = async () => {
+      if (!user) {
+        await telegramSignIn({ forceCreateUser: true });
+      }
+      setIsLoading(false);
+
+      console.log("user", user);
+      console.log("user.dogeWallet", user?.dogeWallet);
+      console.log("isSmartWallet", isSmartWallet(user?.dogeWallet as any));
+      console.log("getEOAWallet", getEOAWallet(user?.dogeWallet as any));
+    };
+
+    signIn();
+
+    // check
+  }, [sdkHasLoaded]);
+
   return (
     <List>
-      <Section
+      {/* <Section
         header='Features'
         footer='You can use these pages to learn more about features, provided by Telegram Mini Apps and other useful projects'
       >
@@ -35,6 +74,14 @@ export default function Home() {
         <Link href='/theme-params'>
           <Cell subtitle='Telegram application palette information'>Theme Parameters</Cell>
         </Link>
+      </Section> */}
+
+      <Section>
+        <WorldIDVerification />
+
+        {isLoading ? <Spinner size="m" /> : <DynamicWidget />}
+
+        {JSON.stringify(user)}
       </Section>
     </List>
   );
