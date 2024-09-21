@@ -13,7 +13,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useState } from "react";
 import { DetailSake } from "./_balance";
 import {
@@ -35,7 +35,6 @@ const FormSchema = z.object({
 const Stake = (props: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { toast } = useToast();
   const [step, setStep] = useState(0);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -47,13 +46,13 @@ const Stake = (props: Props) => {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
 
-    toast({ title: "Staking..." });
+    const toastId = toast.loading("Staking...");
 
     try {
       // hit stake contract
       setTimeout(() => {
-        toast({
-          title: "Stake successful",
+        toast.success("Stake successful", {
+          id: toastId,
           description: "You have successfully staked your tokens.",
         });
       }, 2000);
@@ -84,7 +83,7 @@ const Stake = (props: Props) => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6 text-sm mt-2"
+                className="mt-2 space-y-6 text-sm"
               >
                 <FormField
                   control={form.control}
