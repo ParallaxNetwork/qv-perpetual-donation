@@ -8,6 +8,7 @@ import { handleVerify } from "@/lib/dynamic";
 
 const WorldIDVerification: React.FC = () => {
   const router = useRouter();
+  console.log("init", window.location);
 
   // Success callback
   const onSuccess = () => {
