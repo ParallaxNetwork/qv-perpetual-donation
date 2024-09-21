@@ -1,6 +1,6 @@
 "use client";
 
-import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
+import { type PropsWithChildren, useEffect, useMemo } from "react";
 import {
   SDKProvider,
   useLaunchParams,
