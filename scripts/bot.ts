@@ -9,7 +9,7 @@ const LOGIN_URL = process.env.LOGIN_URL;
 
 if (!TOKEN || !LOGIN_URL) {
   console.error(
-    "Please add your Telegram bot token and app URL to the .env file"
+    "Please add your Telegram bot token and app URL to the .env file",
   );
   process.exit(1);
 }
@@ -47,7 +47,7 @@ bot.start((ctx: any) => {
       hash,
     },
     TOKEN, // Use the bot token to sign the JWT
-    { algorithm: "HS256" }
+    { algorithm: "HS256" },
   );
   console.log("[DEBUG] JWT generated for user", userData);
 
@@ -60,7 +60,7 @@ bot.start((ctx: any) => {
       inline_keyboard: [
         [
           {
-            text: "Open Mini Web App 🚀",
+            text: "Launch App 🚀",
             web_app: {
               url: `${LOGIN_URL}/?telegramAuthToken=${encodedTelegramAuthToken}`,
             },
@@ -71,7 +71,7 @@ bot.start((ctx: any) => {
   };
 
   // Send a welcome message with the inline keyboard
-  ctx.reply("Welcome to XYZ Mini Web App", keyboard);
+  ctx.reply("Welcome to PQD", keyboard);
 });
 
 // Launch the bot
@@ -99,7 +99,7 @@ const generateTelegramHash = (data: any) => {
       if (value) acc[key] = value;
       return acc;
     },
-    {} as { [key: string]: any }
+    {} as { [key: string]: any },
   );
 
   // Sort the entries and create the data check string

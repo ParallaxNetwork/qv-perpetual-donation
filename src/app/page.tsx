@@ -4,13 +4,9 @@ import { Section, List } from "@telegram-apps/telegram-ui";
 
 export default function Home() {
   return (
-    <List>
-      <Section>
-        <div className="bg-white">
-          <WorldIDVerification />
-          {/* <DynamicWallet /> */}
-        </div>
-      </Section>
-    </List>
+    <div className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+      <WorldIDVerification />
+      {/* <DynamicWallet /> */}
+    </div>
   );
 }
