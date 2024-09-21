@@ -11,7 +11,7 @@ type Props = {};
 
 const DynamicWallet = (props: Props) => {
   const { sdkHasLoaded, user } = useDynamicContext();
-  const { telegramSignIn }: any = useTelegramLogin();
+  const { telegramSignIn } = useTelegramLogin();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -32,8 +32,10 @@ const DynamicWallet = (props: Props) => {
   ) : (
     <>
       <DynamicWidget />
-      {/* <br /> */}
-      {/* user: {JSON.stringify(user)} */}
+      <br />
+      sdkHasLoaded: {sdkHasLoaded}
+      <br />
+      user: {JSON.stringify(user)}
     </>
   );
 };
