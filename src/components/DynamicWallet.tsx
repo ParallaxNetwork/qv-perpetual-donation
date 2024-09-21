@@ -19,8 +19,7 @@ const DynamicWallet = (props: Props) => {
 
     const signIn = async () => {
       if (!user) {
-        const ts = await telegramSignIn({ forceCreateUser: true });
-        console.log("telegramSignIn", ts);
+        await telegramSignIn({ forceCreateUser: true });
       }
       setIsLoading(false);
     };

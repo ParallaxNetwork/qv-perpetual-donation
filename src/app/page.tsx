@@ -7,8 +7,8 @@ export default function Home() {
     <List>
       <Section>
         <div className="bg-white">
-          {/* <WorldIDVerification /> */}
-          <DynamicWallet />
+          <WorldIDVerification />
+          {/* <DynamicWallet /> */}
         </div>
       </Section>
     </List>
