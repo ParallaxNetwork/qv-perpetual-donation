@@ -12,7 +12,10 @@ type Props = {};
 
 const DynamicWallet = (props: Props) => {
   const searchParams = useSearchParams();
-  console.log("connect searchParams", searchParams);
+  console.log("dynamic");
+  searchParams.forEach((value, key) => {
+    console.log(key, value);
+  });
 
   const { sdkHasLoaded, user } = useDynamicContext();
   const { telegramSignIn } = useTelegramLogin();

@@ -9,7 +9,10 @@ import { handleVerify } from "@/lib/dynamic";
 const WorldIDVerification: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  console.log("searchParams", searchParams);
+  console.log("world id");
+  searchParams.forEach((value, key) => {
+    console.log(key, value);
+  });
 
   console.log("init", window.location);
 
