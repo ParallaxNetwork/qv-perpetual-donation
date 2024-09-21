@@ -2,16 +2,19 @@
 import {
   DynamicWidget,
   useDynamicContext,
-  useSocialAccounts,
   useTelegramLogin,
 } from "@dynamic-labs/sdk-react-core";
 import { Spinner } from "@telegram-apps/telegram-ui";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ProviderEnum } from "@dynamic-labs/types";
 
 type Props = {};
 
 const DynamicWallet = (props: Props) => {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search");
+  console.log("connect search", search);
+
   const { sdkHasLoaded, user } = useDynamicContext();
   const { telegramSignIn } = useTelegramLogin();
   const [isLoading, setIsLoading] = useState<boolean>(true);

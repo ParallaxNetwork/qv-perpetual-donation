@@ -3,17 +3,21 @@
 import React from "react";
 import { IDKitWidget, VerificationLevel } from "@worldcoin/idkit";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { handleVerify } from "@/lib/dynamic";
 
 const WorldIDVerification: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search");
+  console.log("search", search);
+
   console.log("init", window.location);
 
   // Success callback
   const onSuccess = () => {
     console.log(window.location);
-    router.push("/connect");
+    router.push("/connect" + "?" + search);
     console.log(window.location);
   };
 
