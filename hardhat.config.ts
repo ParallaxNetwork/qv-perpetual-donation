@@ -65,7 +65,17 @@ const config: HardhatUserConfig = {
             eid: EndpointId.BASESEP_V2_TESTNET,
             url: process.env.RPC_URL_BASE_SEP as string,
             accounts: PRIVATE_KEY ? [PRIVATE_KEY] : undefined,
-        }
+        },
+        'amoy-testnet': {
+            eid: EndpointId.AMOY_V2_TESTNET,
+            url: process.env.RPC_URL_AMOY as string,
+            accounts: PRIVATE_KEY ? [PRIVATE_KEY] : undefined,
+        },
+        'bsc-testnet': {
+            eid: EndpointId.BSC_V2_TESTNET,
+            url: process.env.RPC_URL_BSC_TEST as string,
+            accounts: PRIVATE_KEY ? [PRIVATE_KEY] : undefined,
+        },
     },
     namedAccounts: {
         deployer: {
@@ -74,6 +84,15 @@ const config: HardhatUserConfig = {
             'holesky-testnet':  `privatekey://${process.env.PRIVATE_KEY}`,
             'arbsep-testnet':  `privatekey://${process.env.PRIVATE_KEY}`,
             'basesep-testnet':  `privatekey://${process.env.PRIVATE_KEY}`,
+        },
+        c2deployer: {
+            default: 0, // wallet address of index[0], of the mnemonic in .env
+            'sepolia-testnet':  `privatekey://${process.env.C2_PRIVATE_KEY}`,
+            'holesky-testnet':  `privatekey://${process.env.C2_PRIVATE_KEY}`,
+            'arbsep-testnet':  `privatekey://${process.env.C2_PRIVATE_KEY}`,
+            'basesep-testnet':  `privatekey://${process.env.C2_PRIVATE_KEY}`,
+            'amoy-testnet':  `privatekey://${process.env.C2_PRIVATE_KEY}`,
+            'bsc-testnet':  `privatekey://${process.env.C2_PRIVATE_KEY}`,
         },
     },
 }

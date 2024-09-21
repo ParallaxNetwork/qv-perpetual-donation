@@ -3,34 +3,59 @@
 pragma solidity ^0.8.22;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
 import { OApp, MessagingFee, Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import { MessagingReceipt } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol";
 
-contract EthBridge is OApp {
-    constructor(address _endpoint, address _delegate) OApp(_endpoint, _delegate) Ownable(_delegate) {}
+interface IDonationManager {
+    function deposit(address sender) external payable;
+}
 
-    event BridgeInitiated(uint32 _dstEid, uint256 amount, address sender);
+contract StakeBridge is OApp {
+    using OptionsBuilder for bytes;
+
+    address public donationManager;
+    uint32 public immutable srcEid;
+
+    constructor(
+        address _endpoint,
+        address _delegate,
+        address _donationManager,
+        uint32 _srcEid
+    ) OApp(_endpoint, _delegate) Ownable(_delegate) {
+        donationManager = _donationManager;
+        srcEid = _srcEid;
+    }
+
+    event DepositInitiated(uint32 _dstEid, uint256 amount, address sender);
     event ReceivedOnDestination(address sender, uint256 amount);
 
-    /**
-     * @notice Sends ETH from the source chain to a destination chain.
-     * @param _dstEid The endpoint ID of the destination chain.
-     * @param _amount The amount of ETH to send.
-     * @param _options Additional options for message execution.
-     * @dev Sends the ETH using the `_lzSend` internal function with the `lzNativeDrop` for native gas token bridging.
-     * @return receipt A `MessagingReceipt` struct containing details of the message sent.
-     */
-    function bridgeETH(
-        uint32 _dstEid,
-        uint256 _amount,
-        bytes calldata _options
-    ) external payable returns (MessagingReceipt memory receipt) {
-        require(msg.value >= _amount, "Insufficient ETH for bridging.");
+    receive() external payable {
+        uint32 _dstEid = 40217; // holesky endpoint id
+        uint256 fixAmt;
+        if (srcEid == _dstEid) {
+            IDonationManager(donationManager).deposit{ value: msg.value }(msg.sender);
+            fixAmt = msg.value;
+        } else {
+            bytes memory _options = OptionsBuilder
+                .newOptions()
+                .addExecutorLzReceiveOption(50000, 0)
+                .addExecutorNativeDropOption(0, bytes32(uint256(uint160(donationManager))));
 
-        bytes memory payload = abi.encode(msg.sender, _amount);
-        receipt = _lzSend(_dstEid, payload, _options, MessagingFee(msg.value, 0), payable(msg.sender));
+            uint256 fee = (quoteBridgeFee(_dstEid, 0, _options, false)).nativeFee;
+            fixAmt = msg.value - fee - 1000000000000000;
 
-        emit BridgeInitiated(_dstEid, _amount, msg.sender);
+            // the amount paid will not be fully staked, but the fee take a bit of the amount
+            _options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(500000, 0).addExecutorNativeDropOption(
+                uint128(fixAmt),
+                bytes32(uint256(uint160(donationManager)))
+            );
+
+            bytes memory payload = abi.encode(msg.sender, fixAmt);
+            _lzSend(_dstEid, payload, _options, MessagingFee(msg.value, 0), payable(msg.sender));
+        }
+
+        emit DepositInitiated(_dstEid, fixAmt, msg.sender);
     }
 
     /**
@@ -83,7 +108,4 @@ contract EthBridge is OApp {
     function withdrawETH() external onlyOwner {
         payable(owner()).transfer(address(this).balance);
     }
-
-    // Fallback function to accept ETH
-    receive() external payable {}
 }
