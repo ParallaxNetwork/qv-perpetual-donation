@@ -32,8 +32,8 @@ const DynamicWallet = (props: Props) => {
   ) : (
     <>
       <DynamicWidget />
-      <br />
-      user: {JSON.stringify(user)}
+      {/* <br /> */}
+      {/* user: {JSON.stringify(user)} */}
     </>
   );
 };
