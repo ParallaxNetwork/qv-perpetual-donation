@@ -9,15 +9,14 @@ import { handleVerify } from "@/lib/dynamic";
 const WorldIDVerification: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const search = searchParams.get("search");
-  console.log("search", search);
+  console.log("searchParams", searchParams);
 
   console.log("init", window.location);
 
   // Success callback
   const onSuccess = () => {
     console.log(window.location);
-    router.push("/connect" + "?" + search);
+    router.push("/connect" + "?" + searchParams.toString());
     console.log(window.location);
   };
 
