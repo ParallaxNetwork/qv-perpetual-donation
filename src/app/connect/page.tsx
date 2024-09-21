@@ -43,7 +43,9 @@ const Connect = (props: Props) => {
         localStorage.removeItem("world_id_payload");
       })
       .finally(() => {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       });
   }, [router]);
 
