@@ -50,7 +50,7 @@ const Connect = (props: Props) => {
   }, [router]);
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center text-white">
+    <div className="flex min-h-screen w-full items-center justify-center text-neutral-900">
       <div className="flex flex-col items-center gap-2">
         <Spinner size="s" />
         <p>{loading ? "Verifying World ID..." : "Redirecting..."}</p>

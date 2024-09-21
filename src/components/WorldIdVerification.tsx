@@ -25,7 +25,9 @@ const WorldIDVerification: React.FC = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 text-gray-700">
-      <h1 className="mb-6 text-2xl font-bold text-white">Are you human?</h1>
+      <h1 className="mb-6 text-2xl font-bold text-neutral-900">
+        Are you human?
+      </h1>
 
       <div className="flex max-w-md flex-col gap-4 md:flex-row">
         <IDKitWidget

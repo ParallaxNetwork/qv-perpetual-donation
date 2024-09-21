@@ -18,6 +18,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorPage } from "@/components/ErrorPage";
 import { useTelegramMock } from "@/hooks/useTelegramMock";
 import { useDidMount } from "@/hooks/useDidMount";
+import { LoaderIcon } from "lucide-react";
 
 import {
   DynamicContextProvider,
@@ -105,9 +106,12 @@ export function Root(props: PropsWithChildren) {
       <RootInner {...props} />
     </ErrorBoundary>
   ) : (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white">
-      <h1 className="text-4xl font-bold">QIVE</h1>
-      <p>Loading...</p>
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 text-neutral-900">
+      <h1 className="text-4xl font-bold text-primary">QIVE</h1>
+      <div className="flex items-center gap-2">
+        <LoaderIcon className="size-4 animate-spin" />
+        <span>Loading</span>
+      </div>
     </div>
   );
 }
