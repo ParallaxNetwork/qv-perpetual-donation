@@ -35,7 +35,7 @@ const DynamicWallet = (props: Props) => {
       <br />
       sdkHasLoaded: {sdkHasLoaded}
       <br />
-      user: {JSON.stringify(user)}
+      user: {JSON.stringify(user).slice(0, 100)}
     </>
   );
 };
