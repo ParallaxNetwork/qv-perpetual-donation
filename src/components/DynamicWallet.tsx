@@ -10,22 +10,23 @@ import { useEffect, useState } from "react";
 type Props = {};
 
 const DynamicWallet = (props: Props) => {
-  const { sdkHasLoaded, user } = useDynamicContext();
+  // const { dc.sdkHasLoaded, user, } = useDynamicContext();
+  const dc = useDynamicContext();
   const { telegramSignIn } = useTelegramLogin();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!sdkHasLoaded) return;
+    if (!dc.sdkHasLoaded) return;
 
     const signIn = async () => {
-      if (!user) {
+      if (!dc.user) {
         await telegramSignIn({ forceCreateUser: true });
       }
       setIsLoading(false);
     };
 
     signIn();
-  }, [sdkHasLoaded]);
+  }, [dc.sdkHasLoaded]);
 
   return isLoading ? (
     <Spinner size="m" />
@@ -33,9 +34,9 @@ const DynamicWallet = (props: Props) => {
     <>
       <DynamicWidget />
       <br />
-      sdkHasLoaded: {sdkHasLoaded}
+      dc.sdkHasLoaded: {dc.sdkHasLoaded}
       <br />
-      user: {JSON.stringify(user).slice(0, 100)}
+      user: {JSON.stringify(dc)}
     </>
   );
 };
