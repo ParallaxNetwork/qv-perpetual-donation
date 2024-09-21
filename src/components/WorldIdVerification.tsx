@@ -11,7 +11,9 @@ const WorldIDVerification: React.FC = () => {
 
   // Success callback
   const onSuccess = () => {
+    console.log(window.location);
     router.push("/connect");
+    console.log(window.location);
   };
 
   return (
