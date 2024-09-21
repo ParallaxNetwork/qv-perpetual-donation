@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DetailSake } from "./_balance";
 import {
   Card,
@@ -25,6 +25,12 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
+import {
+  useDynamicContext,
+  useRpcProviders,
+} from "@dynamic-labs/sdk-react-core";
+import { isEthereumWallet } from "@dynamic-labs/ethereum";
+import { evmProvidersSelector } from "@dynamic-labs/ethereum-core";
 
 type Props = {};
 
@@ -35,6 +41,8 @@ const FormSchema = z.object({
 const Stake = (props: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { defaultProvider } = useRpcProviders(evmProvidersSelector);
+  const { primaryWallet, network } = useDynamicContext();
   const [step, setStep] = useState(0);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -42,6 +50,8 @@ const Stake = (props: Props) => {
       amount: "",
     },
   });
+
+  const [txnHash, setTxnHash] = useState("");
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
@@ -66,6 +76,12 @@ const Stake = (props: Props) => {
   function nextStep() {
     setStep((prev: number) => prev + 1);
   }
+
+  useEffect(() => {
+    console.log("network", network);
+  }, [network]);
+
+  if (!primaryWallet || !isEthereumWallet(primaryWallet)) return null;
 
   return (
     <div className="px-3 py-6">

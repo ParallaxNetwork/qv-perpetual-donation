@@ -105,6 +105,9 @@ export function Root(props: PropsWithChildren) {
       <RootInner {...props} />
     </ErrorBoundary>
   ) : (
-    <div className="root__loading">Loading</div>
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white">
+      <h1 className="text-4xl font-bold">QIVE</h1>
+      <p>Loading...</p>
+    </div>
   );
 }

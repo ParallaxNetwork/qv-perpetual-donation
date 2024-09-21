@@ -9,16 +9,16 @@ import "./_assets/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "Quive",
+  title: "QIVE",
   description: "Perpetual Quadratic Donation Protocol",
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
         <Root>
-          <div className="mx-auto max-w-lg bg-white">
+          <div className="mx-auto max-w-lg">
             {children}
             <Toaster />
           </div>

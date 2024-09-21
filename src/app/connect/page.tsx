@@ -1,6 +1,5 @@
 "use client";
 
-import DynamicWallet from "@/components/DynamicWallet";
 import { handleVerify } from "@/lib/dynamic";
 import { Spinner } from "@telegram-apps/telegram-ui";
 import { useRouter } from "next/navigation";
@@ -45,20 +44,17 @@ const Connect = (props: Props) => {
       .finally(() => {
         setTimeout(() => {
           setLoading(false);
+          router.push("/stake");
         }, 1000);
       });
   }, [router]);
 
   return (
-    <div className="flex min-h-screen w-full justify-center items-center text-gray-700">
-      {loading ? (
-        <div className="flex flex-col items-center gap-2">
-          <Spinner size="s" />
-          <p>Verifying World ID...</p>
-        </div>
-      ) : (
-        <DynamicWallet />
-      )}
+    <div className="flex min-h-screen w-full items-center justify-center text-white">
+      <div className="flex flex-col items-center gap-2">
+        <Spinner size="s" />
+        <p>{loading ? "Verifying World ID..." : "Redirecting..."}</p>
+      </div>
     </div>
   );
 };
