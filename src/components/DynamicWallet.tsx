@@ -2,41 +2,41 @@
 import {
   DynamicWidget,
   useDynamicContext,
+  useSocialAccounts,
   useTelegramLogin,
 } from "@dynamic-labs/sdk-react-core";
 import { Spinner } from "@telegram-apps/telegram-ui";
 import { useEffect, useState } from "react";
+import { ProviderEnum } from "@dynamic-labs/types";
 
 type Props = {};
 
 const DynamicWallet = (props: Props) => {
-  // const { dc.sdkHasLoaded, user, } = useDynamicContext();
-  const dc = useDynamicContext();
+  const { sdkHasLoaded, user } = useDynamicContext();
   const { telegramSignIn } = useTelegramLogin();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!dc.sdkHasLoaded) return;
+    if (!sdkHasLoaded) return;
 
     const signIn = async () => {
-      if (!dc.user) {
+      if (!user) {
         await telegramSignIn({ forceCreateUser: true });
       }
-      setIsLoading(false);
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     };
 
     signIn();
-  }, [dc.sdkHasLoaded]);
+  }, [sdkHasLoaded]);
 
   return isLoading ? (
     <Spinner size="m" />
   ) : (
     <>
       <DynamicWidget />
-      <br />
-      dc.sdkHasLoaded: {dc.sdkHasLoaded}
-      <br />
-      user: {JSON.stringify(dc)}
     </>
   );
 };
