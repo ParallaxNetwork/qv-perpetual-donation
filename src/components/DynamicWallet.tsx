@@ -19,17 +19,24 @@ const DynamicWallet = (props: Props) => {
 
     const signIn = async () => {
       if (!user) {
-        await telegramSignIn({ forceCreateUser: true });
+        const ts = await telegramSignIn({ forceCreateUser: true });
+        console.log("telegramSignIn", ts);
       }
       setIsLoading(false);
     };
 
     signIn();
-
-    // check
   }, [sdkHasLoaded]);
 
-  return isLoading ? <Spinner size="m" /> : <DynamicWidget />;
+  return isLoading ? (
+    <Spinner size="m" />
+  ) : (
+    <>
+      <DynamicWidget />
+      <br />
+      user: {JSON.stringify(user)}
+    </>
+  );
 };
 
 export default DynamicWallet;
