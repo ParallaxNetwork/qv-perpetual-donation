@@ -73,7 +73,7 @@ const Stake = (props: Props) => {
     // const _amount = BigInt(data.amount);
     const _amount = parseEther(data.amount);
 
-    toast({ title: "Staking..." });
+    toast.info("Staking...");
 
     try {
       const receiverAddressInBytes32 = hexZeroPadTo32(address as string);
@@ -151,15 +151,13 @@ const Stake = (props: Props) => {
         },
         {
           onSuccess: () => {
-            toast({
-              title: "Stake successful",
+            toast.success("Stake successful", {
               description: "You have successfully staked your tokens.",
             });
           },
           onError: (error) => {
             console.error(error);
-            toast({
-              title: "Error",
+            toast.error("Error",{
               description: "An error occurred while staking.",
             });
           },
@@ -180,7 +178,7 @@ const Stake = (props: Props) => {
     console.log("network", network);
   }, [network]);
 
-  if (!primaryWallet || !isEthereumWallet(primaryWallet)) return null;
+  // if (!primaryWallet || !isEthereumWallet(primaryWallet)) return null;
 
   return (
     <div className="px-3 py-6">
