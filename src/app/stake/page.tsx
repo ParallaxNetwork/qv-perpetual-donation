@@ -37,8 +37,8 @@ import {
   useDynamicContext,
   useRpcProviders,
 } from "@dynamic-labs/sdk-react-core";
-import { isEthereumWallet } from "@dynamic-labs/ethereum";
 import { evmProvidersSelector } from "@dynamic-labs/ethereum-core";
+import DynamicWallet from "@/components/DynamicWallet";
 
 type Props = {};
 
@@ -70,7 +70,6 @@ const Stake = (props: Props) => {
 
     console.log("address");
 
-    // const _amount = BigInt(data.amount);
     const _amount = parseEther(data.amount);
 
     toast.info("Staking...");
@@ -155,7 +154,7 @@ const Stake = (props: Props) => {
               description: "You have successfully staked your tokens.",
             });
           },
-          onError: (error) => {
+          onError: (error: any) => {
             console.error(error);
             toast.error("Error",{
               description: "An error occurred while staking.",
@@ -176,60 +175,69 @@ const Stake = (props: Props) => {
 
   useEffect(() => {
     console.log("network", network);
-  }, [network]);
+    console.log("primaryWallet", primaryWallet);
+  }, [network,primaryWallet]);
 
   // if (!primaryWallet || !isEthereumWallet(primaryWallet)) return null;
 
   return (
-    <div className="px-3 py-6">
-      {step === 0 ? (
-        <DetailSake nextStep={nextStep} />
-      ) : (
-        <Card className={cn("")} {...props}>
-          <CardHeader>
-            <CardTitle className="text-2xl">Stake to continue</CardTitle>
-            <CardDescription>
-              The following conditions must be met to proceed.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="mt-2 space-y-6 text-sm"
-              >
-                <FormField
-                  control={form.control}
-                  name="amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-700">Amount</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Input amount you want to stake"
-                          {...field}
-                        />
-                      </FormControl>
-                      {/* <FormDescription>
-                  This is your public display name.
-                </FormDescription> */}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  // disabled={parseInt(form.getValues("amount")) <= 0}
-                  type="submit"
-                  className="w-full"
-                >
-                  Stake
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      )}
+    <div className="relative flex h-screen flex-col">
+        <div className="mt-8 flex items-center justify-between px-6">
+          <h1 className="text-4xl font-bold text-primary">QIVE</h1>
+          <DynamicWallet />
+        </div>
+        <div className="relative my-6 flex grow justify-center">
+          <div className="">
+            {step === 0 ? (
+              <DetailSake nextStep={nextStep} />
+            ) : (
+              <Card className={cn("")} {...props}>
+                <CardHeader>
+                  <CardTitle className="text-2xl">Stake to continue</CardTitle>
+                  <CardDescription>
+                    The following conditions must be met to proceed.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4">
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="mt-2 space-y-6 text-sm"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="amount"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-700">Amount</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Input amount you want to stake"
+                                {...field}
+                              />
+                            </FormControl>
+                            {/* <FormDescription>
+                        This is your public display name.
+                      </FormDescription> */}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        // disabled={parseInt(form.getValues("amount")) <= 0}
+                        type="submit"
+                        className="w-full"
+                      >
+                        Stake
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
     </div>
   );
 };
