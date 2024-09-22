@@ -1,5 +1,11 @@
 "use client";
 
+import { useAccount, useWalletClient } from "wagmi";
+import { sepolia, arbitrumSepolia, holesky, baseSepolia } from "wagmi/chains";
+import { useWriteContract } from "wagmi";
+import ETHBridge from "@/utils/abi/EthBridge.sol/EthBridge.json";
+import { hexZeroPadTo32, Options } from "@layerzerolabs/lz-v2-utilities";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,6 +31,8 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
+import { readContract } from "viem/actions";
+import { Client, parseEther } from "viem";
 
 type Props = {};
 
@@ -36,6 +44,12 @@ const Stake = (props: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
+
+  const { address, chainId } = useAccount();
+  const { data: client, isFetched } = useWalletClient();
+
+  const { writeContract } = useWriteContract();
+
   const [step, setStep] = useState(0);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -44,19 +58,106 @@ const Stake = (props: Props) => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
+
+    console.log("address");
+
+    // const _amount = BigInt(data.amount);
+    const _amount = parseEther(data.amount);
 
     toast({ title: "Staking..." });
 
     try {
-      // hit stake contract
-      setTimeout(() => {
-        toast({
-          title: "Stake successful",
-          description: "You have successfully staked your tokens.",
-        });
-      }, 2000);
+      const receiverAddressInBytes32 = hexZeroPadTo32(address as string);
+
+      let EID = 0;
+      let ethBrigde = "";
+
+      let holeskyEID = 40217;
+
+      if (chainId === sepolia.id) {
+        ethBrigde = "0xc5C89151AF3cE858bdECE60d24D20D23d611210a";
+        EID = 40161;
+      } else if (chainId === arbitrumSepolia.id) {
+        ethBrigde = "0x00Ab0839BFE0c17716A015e36350b49e0bDf0feF";
+        EID = 40231;
+      } else if (chainId === baseSepolia.id) {
+        ethBrigde = "0xa61Bc9c98a1486E5496078b30579f0A3af4c6929";
+        EID = 40245;
+      } else if (chainId === holesky.id) {
+        EID = 40217;
+        ethBrigde = "0x6527800Ef9f9c0772e064F5302592A354b1D07Cc";
+      }
+
+      // Define the options using lzNativeDrop and lzReceiveOption
+      const options = Options.newOptions()
+        .addExecutorNativeDropOption(_amount, receiverAddressInBytes32) // Native Drop option
+        .addExecutorLzReceiveOption(500000, 0)
+        .toHex()
+        .toString();
+
+      console.log(options);
+
+      // Quote the bridge fee
+      const result = await readContract(client as Client, {
+        abi: ETHBridge.abi,
+        address: "0x6b175474e89094c44da98b954eedeac495271d0f",
+        functionName: "quoteBridgeFee",
+        args: [holeskyEID, _amount, options, false],
+      });
+
+      console.log(
+        "Estimated native fee for the bridge include bridge amount:",
+        result
+      );
+
+      // writeContract({
+      //   abi: ETHBridge.abi,
+      //   address: ethBrigde as `0x${string}`,
+      //   functionName: "bridgeETH",
+      //   args: [
+      //     EID,
+      //     ethBrigde,
+      //     {
+      //       value: nativeFee,
+      //       gasLimit: 500000, // Adjust gas limit as needed
+      //     },
+      //   ],
+      // });
+
+      // setTimeout(() => {
+      //   toast({
+      //     title: "Stake successful",
+      //     description: "You have successfully staked your tokens.",
+      //   });
+      // }, 2000);
+
+      //
+      writeContract(
+        {
+          abi: ETHBridge.abi,
+          address: "0xb03A1229B8B71cD5C97Abd10BE0238700970a770",
+          functionName: "deposit",
+          args: [address],
+          value: _amount,
+        },
+        {
+          onSuccess: () => {
+            toast({
+              title: "Stake successful",
+              description: "You have successfully staked your tokens.",
+            });
+          },
+          onError: (error) => {
+            console.error(error);
+            toast({
+              title: "Error",
+              description: "An error occurred while staking.",
+            });
+          },
+        }
+      );
 
       router.push("/stake/detail" + "?" + searchParams.toString());
     } catch (error) {
@@ -107,7 +208,7 @@ const Stake = (props: Props) => {
                   )}
                 />
                 <Button
-                  disabled={parseInt(form.getValues("amount")) <= 0}
+                  // disabled={parseInt(form.getValues("amount")) <= 0}
                   type="submit"
                   className="w-full"
                 >

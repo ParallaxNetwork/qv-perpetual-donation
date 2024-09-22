@@ -19,6 +19,10 @@ import { ErrorPage } from "@/components/ErrorPage";
 import { useTelegramMock } from "@/hooks/useTelegramMock";
 import { useDidMount } from "@/hooks/useDidMount";
 
+import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
+import { WagmiProvider } from "wagmi";
+import { QueryClientProvider } from "@tanstack/react-query";
+
 import {
   DynamicContextProvider,
   EthereumWalletConnectors,
@@ -26,6 +30,7 @@ import {
 import { ZeroDevSmartWalletConnectors } from "@dynamic-labs/ethereum-aa";
 
 import "./styles.css";
+import { config, queryClient } from "@/lib/wagmi";
 
 const dynEnv = process.env.NEXT_PUBLIC_DYNAMIC_ENV_ID;
 
@@ -61,7 +66,11 @@ function App(props: PropsWithChildren) {
           ],
         }}
       >
-        {props.children}
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <DynamicWagmiConnector>{props.children}</DynamicWagmiConnector>
+          </QueryClientProvider>
+        </WagmiProvider>
       </DynamicContextProvider>
     </AppRoot>
   );

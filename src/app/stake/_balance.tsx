@@ -27,14 +27,14 @@ import { useToast } from "@/hooks/use-toast";
 const shortAddress = (address: string) =>
   address.slice(0, 6) + "..." + address.slice(-4);
 
-type CardProps = React.ComponentProps<typeof Card>;
+type CardProps = React.ComponentProps<typeof Card> & { nextStep: () => void };
 
 const FormSchema = z.object({
   tnc: z.boolean().default(false).optional(),
 });
 
 export function DetailSake({ className, nextStep, ...props }: CardProps) {
-  const toast = useToast();
+  const { toast } = useToast();
   const [balance, setBalance] = useState(0.1);
 
   const form = useForm<z.infer<typeof FormSchema>>({
