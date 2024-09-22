@@ -75,7 +75,7 @@ const Stake = (props: Props) => {
     toast.info("Staking...");
 
     try {
-      const receiverAddressInBytes32 = hexZeroPadTo32(address as string);
+      const receiverAddressInBytes32 = hexZeroPadTo32(primaryWallet as string);
 
       let EID = 0;
       let ethBrigde = "";
@@ -105,47 +105,61 @@ const Stake = (props: Props) => {
 
       console.log(options);
 
-      // Quote the bridge fee
-      const result = await readContract(client as Client, {
-        abi: ETHBridge.abi,
-        address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-        functionName: "quoteBridgeFee",
-        args: [holeskyEID, _amount, options, false],
-      });
+      
+      if(chainId !== holesky.id) {
+        toast.info("Bridging...");
 
-      console.log(
-        "Estimated native fee for the bridge include bridge amount:",
-        result
-      );
+        // Quote the bridge fee
+        const result = await readContract(client as Client, {
+          abi: ETHBridge.abi,
+          address: "0x6b175474e89094c44da98b954eedeac495271d0f",
+          functionName: "quoteBridgeFee",
+          args: [holeskyEID, _amount, options, false],
+        });
+  
+        console.log(
+          "Estimated native fee for the bridge include bridge amount:",
+          result
+        );
 
-      // writeContract({
-      //   abi: ETHBridge.abi,
-      //   address: ethBrigde as `0x${string}`,
-      //   functionName: "bridgeETH",
-      //   args: [
-      //     EID,
-      //     ethBrigde,
-      //     {
-      //       value: nativeFee,
-      //       gasLimit: 500000, // Adjust gas limit as needed
-      //     },
-      //   ],
-      // });
 
-      // setTimeout(() => {
-      //   toast({
-      //     title: "Stake successful",
-      //     description: "You have successfully staked your tokens.",
-      //   });
-      // }, 2000);
+        const nativeFee = (result as any).nativeFee;
 
-      //
+
+        writeContract({
+          abi: ETHBridge.abi,
+          address: ethBrigde as `0x${string}`,
+          functionName: "bridgeETH",
+          args: [
+            EID,
+            ethBrigde,
+            {
+              value: nativeFee,
+              gasLimit: 500000, // Adjust gas limit as needed
+            },
+          ],
+        }, {
+          onSuccess: () => {
+            toast.success("Stake successful", {
+              description: "You have successfully staked your tokens.",
+            });
+          },
+          onError: (error: any) => {
+            console.error(error);
+            toast.error("Error",{
+              description: "An error occurred while staking.",
+            });
+          }
+        });
+      }
+
+
       writeContract(
         {
           abi: ETHBridge.abi,
           address: "0xb03A1229B8B71cD5C97Abd10BE0238700970a770",
           functionName: "deposit",
-          args: [address],
+          args: [primaryWallet],
           value: _amount,
         },
         {
@@ -163,9 +177,16 @@ const Stake = (props: Props) => {
         }
       );
 
-      router.push("/stake/detail" + "?" + searchParams.toString());
+      // router.push("/stake/detail" + "?" + searchParams.toString());
     } catch (error) {
       console.error(error);
+    } 
+    
+    // temporary demo
+    finally {
+      setTimeout(() => {
+        router.push("/round" + "?" + searchParams.toString());
+      }, 1000)
     }
   }
 
