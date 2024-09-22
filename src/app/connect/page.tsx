@@ -4,11 +4,13 @@ import { handleVerify } from "@/lib/dynamic";
 import { Spinner } from "@telegram-apps/telegram-ui";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 type Props = {};
 
 const Connect = (props: Props) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<boolean>(true);
 
   // A utility function to safely retrieve and parse localStorage data
@@ -44,10 +46,14 @@ const Connect = (props: Props) => {
       .finally(() => {
         setTimeout(() => {
           setLoading(false);
-          router.push("/stake");
+          console.log(
+            "searchParams:",
+            searchParams.forEach((data, key) => console.log({ data, key })),
+          );
+          router.push("/stake" + "?" + searchParams.toString());
         }, 1000);
       });
-  }, [router]);
+  }, [router, searchParams]);
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center text-neutral-900">

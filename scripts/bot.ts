@@ -71,7 +71,7 @@ bot.start((ctx: any) => {
   };
 
   // Send a welcome message with the inline keyboard
-  ctx.reply("Welcome to PQD", keyboard);
+  ctx.reply("Welcome to QIVE", keyboard);
 });
 
 // Launch the bot

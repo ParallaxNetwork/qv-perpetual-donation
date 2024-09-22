@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import SwipeCard from "@/components/SwipeCard";
 import { dummyData } from "@/lib/dummy";
+import DynamicWallet from "@/components/DynamicWallet";
 
 type Props = {};
 
@@ -12,17 +13,18 @@ const Round = (props: Props) => {
   return (
     <>
       <div className="relative flex h-screen flex-col">
-        <h1 className="mt-8 text-center text-4xl font-bold text-primary">
-          QIVE
-        </h1>
+        <div className="mt-8 flex items-center justify-between px-6">
+          <h1 className="text-4xl font-bold text-primary">QIVE</h1>
+          <DynamicWallet />
+        </div>
         <div className="relative my-6 flex grow justify-center">
           {currentCard >= dummyData.length ? (
             <div>No more issues</div>
           ) : (
-            dummyData.reverse().map((data, index) => (
+            dummyData.map((data, index) => (
               <SwipeCard
                 key={index}
-                content={data}
+                content={{ ...data, index }}
                 afterSwipe={(data) => {
                   setCurrentCard(currentCard + 1);
                 }}

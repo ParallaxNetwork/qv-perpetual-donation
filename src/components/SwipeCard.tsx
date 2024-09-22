@@ -145,7 +145,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ content, afterSwipe }) => {
               sizes="100%"
               alt=""
               fill={true}
-              className="object-cover object-center"
+              className="pointer-events-none object-cover object-center"
             />
           </div>
 
@@ -217,7 +217,7 @@ function PledgeForm({
       setTimeout(() => {
         toast.success("Pledge successful", {
           id: toastId,
-          description: "You have successfully staked your tokens.",
+          description: "You have successfully pledged to the issue.",
         });
         onPledge();
       }, 2000);
@@ -252,7 +252,7 @@ function PledgeForm({
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Input amount you want to stake"
+                          placeholder="Input amount you want to pledge"
                           {...field}
                         />
                       </FormControl>
