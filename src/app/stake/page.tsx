@@ -75,7 +75,7 @@ const Stake = (props: Props) => {
     toast.info("Staking...");
 
     try {
-      const receiverAddressInBytes32 = hexZeroPadTo32(primaryWallet.address as unknown as string);
+      const receiverAddressInBytes32 = hexZeroPadTo32(primaryWallet?.address as unknown as string);
 
       let EID = 0;
       let ethBrigde = "";
@@ -159,7 +159,7 @@ const Stake = (props: Props) => {
           abi: ETHBridge.abi,
           address: "0xb03A1229B8B71cD5C97Abd10BE0238700970a770",
           functionName: "deposit",
-          args: [primaryWallet.address],
+          args: [primaryWallet?.address],
           value: _amount,
         },
         {
