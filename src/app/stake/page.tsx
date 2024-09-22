@@ -75,7 +75,7 @@ const Stake = (props: Props) => {
     toast.info("Staking...");
 
     try {
-      const receiverAddressInBytes32 = hexZeroPadTo32(primaryWallet as string);
+      const receiverAddressInBytes32 = hexZeroPadTo32(primaryWallet as unknown as string);
 
       let EID = 0;
       let ethBrigde = "";
@@ -123,7 +123,7 @@ const Stake = (props: Props) => {
         );
 
 
-        const nativeFee = (result as any).nativeFee;
+        const nativeFee = (result as unknown as any).nativeFee;
 
 
         writeContract({
