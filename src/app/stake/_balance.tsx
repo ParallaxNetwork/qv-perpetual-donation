@@ -22,7 +22,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const shortAddress = (address: string) =>
   address.slice(0, 6) + "..." + address.slice(-4);
@@ -33,8 +33,11 @@ const FormSchema = z.object({
   tnc: z.boolean().default(false).optional(),
 });
 
-export function DetailSake({ className, nextStep, ...props }: CardProps) {
-  const { toast } = useToast();
+export function DetailSake({
+  className,
+  nextStep,
+  ...props
+}: CardProps & { nextStep: () => void }) {
   const [balance, setBalance] = useState(0.1);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -45,8 +48,7 @@ export function DetailSake({ className, nextStep, ...props }: CardProps) {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
+    toast("You submitted the following values:", {
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -76,18 +78,18 @@ export function DetailSake({ className, nextStep, ...props }: CardProps) {
           </div>
         </div> */}
         <div>
-          <div className="mb-4 grid grid-cols-1 items-start pb-4 gap-2">
-            <div className="space-x-1 flex justify-between">
+          <div className="mb-4 grid grid-cols-1 items-start gap-2 pb-4">
+            <div className="flex justify-between space-x-1">
               <p className="text-sm font-medium leading-none">Wallet</p>
               <p className="text-sm text-muted-foreground">
                 {shortAddress("0x93fcd50dDE7a48473c478bb05603F4090FcB5799")}
               </p>
             </div>
-            <div className="space-x-1 flex justify-between">
+            <div className="flex justify-between space-x-1">
               <p className="text-sm font-medium leading-none">Network</p>
               <p className="text-sm text-muted-foreground">Base Chain</p>
             </div>
-            <div className="space-x-1 flex justify-between">
+            <div className="flex justify-between space-x-1">
               <p className="text-sm font-medium leading-none">ETH Available</p>
               <p className="text-sm text-muted-foreground">{balance} ETH</p>
             </div>

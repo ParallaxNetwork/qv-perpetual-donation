@@ -24,10 +24,12 @@ const WorldIDVerification: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 text-gray-700">
-      <h1 className="text-2xl font-bold mb-6">World ID Verification</h1>
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 text-gray-700">
+      <h1 className="mb-6 text-2xl font-bold text-neutral-900">
+        Are you human?
+      </h1>
 
-      <div className="flex flex-col md:flex-row gap-4 max-w-md">
+      <div className="flex max-w-md flex-col gap-4 md:flex-row">
         <IDKitWidget
           app_id={process.env.NEXT_PUBLIC_WORLD_ID_APP_ID as `app_`} // Replace with your app ID
           action={process.env.NEXT_PUBLIC_WORLD_ID_ACTION_ID as string}

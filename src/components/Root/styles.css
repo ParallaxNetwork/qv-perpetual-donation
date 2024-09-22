@@ -7,4 +7,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @apply bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white;
 }

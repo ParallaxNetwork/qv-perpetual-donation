@@ -6,19 +6,19 @@ import { Root } from "@/components/Root/Root";
 import "@telegram-apps/telegram-ui/dist/styles.css";
 import "normalize.css/normalize.css";
 import "./_assets/globals.css";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "Your Application Title Goes Here",
-  description: "Your application description goes here",
+  title: "QIVE",
+  description: "Perpetual Quadratic Donation Protocol",
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-neutral-50">
         <Root>
-          <div className="max-w-lg bg-white mx-auto">
+          <div className="mx-auto max-w-lg">
             {children}
             <Toaster />
           </div>

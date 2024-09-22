@@ -19,8 +19,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { toast } from "sonner";
+import { useState, useEffect } from "react";
 import { DetailSake } from "./_balance";
 import {
   Card,
@@ -33,6 +33,12 @@ import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { readContract } from "viem/actions";
 import { Client, parseEther } from "viem";
+import {
+  useDynamicContext,
+  useRpcProviders,
+} from "@dynamic-labs/sdk-react-core";
+import { isEthereumWallet } from "@dynamic-labs/ethereum";
+import { evmProvidersSelector } from "@dynamic-labs/ethereum-core";
 
 type Props = {};
 
@@ -43,13 +49,14 @@ const FormSchema = z.object({
 const Stake = (props: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { toast } = useToast();
 
   const { address, chainId } = useAccount();
   const { data: client, isFetched } = useWalletClient();
 
   const { writeContract } = useWriteContract();
 
+  const { defaultProvider } = useRpcProviders(evmProvidersSelector);
+  const { primaryWallet, network } = useDynamicContext();
   const [step, setStep] = useState(0);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -169,6 +176,12 @@ const Stake = (props: Props) => {
     setStep((prev: number) => prev + 1);
   }
 
+  useEffect(() => {
+    console.log("network", network);
+  }, [network]);
+
+  if (!primaryWallet || !isEthereumWallet(primaryWallet)) return null;
+
   return (
     <div className="px-3 py-6">
       {step === 0 ? (
@@ -185,7 +198,7 @@ const Stake = (props: Props) => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6 text-sm mt-2"
+                className="mt-2 space-y-6 text-sm"
               >
                 <FormField
                   control={form.control}

@@ -35,7 +35,7 @@ const DynamicWallet = (props: Props) => {
     };
 
     signIn();
-  }, [sdkHasLoaded]);
+  }, [sdkHasLoaded, telegramSignIn, user]);
 
   return isLoading ? (
     <Spinner size="m" />
